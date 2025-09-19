@@ -1,19 +1,23 @@
-GrupoCairo
+# GrupoCairo
 
-Integrante: Cairo
+**Integrante:** Cairo
 
-Sensores Utilizados
+## Sensores Utilizados
+- Sensor de presença PIR
+- Sensor de som (microfone)
 
-Sensor de presença PIR
+## Atuador
+- Buzzer
 
-Sensor de som (microfone)
+## Descrição do Projeto
+O projeto consiste em um **sistema de monitoramento ambiental** baseado em **ESP32**. Ele utiliza um **sensor de movimento (PIR)** e um **sensor de som (microfone)** para detectar eventos no ambiente.  
 
-Atuador
+Sempre que é detectado **movimento** ou **som acima de um determinado limiar**, o **buzzer** é acionado automaticamente, funcionando como **alerta imediato**.  
 
-Buzzer
+Este sistema pode ser aplicado como uma solução simples de **segurança residencial**, monitorando a presença de pessoas e ruídos no ambiente.
 
-Descrição do Projeto
+## Funcionamento
+1. O ESP32 lê os sensores de movimento e som.
+2. Quando um evento é detectado (movimento ou som alto), o ESP32 ativa o buzzer.
+3. O buzzer emite um alerta sonoro para notificar o usuário.
 
-O projeto consiste em um sistema de monitoramento ambiental baseado em ESP32. Ele utiliza um sensor de movimento (PIR) e um sensor de som (microfone) para detectar eventos no ambiente. Sempre que é detectado movimento ou som acima de um determinado limiar, o buzzer é acionado automaticamente, funcionando como um alerta imediato.
-
-Este sistema pode ser aplicado como uma solução simples de segurança residencial, monitorando a presença de pessoas e ruídos no ambiente.
