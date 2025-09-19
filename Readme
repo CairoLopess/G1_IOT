@@ -1,0 +1,8 @@
+Nome do Grupo: GrupoCairo
+Integrante: Cairo
+
+Sensores: Sensor de presença PIR, Sensor de som
+Atuador: Buzzer
+
+Descrição:
+O projeto consiste em um sistema de monitoramento ambiental que utiliza um sensor de movimento (PIR) e um sensor de som (microfone) conectados a um ESP32, com um buzzer como atuador. O buzzer é acionado automaticamente sempre que é detectado movimento ou som acima de um determinado limiar, funcionando como alerta imediato. O sistema pode ser utilizado como um pequeno sistema de segurança residencial, monitorando eventos de movimento e ruído.
