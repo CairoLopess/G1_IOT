@@ -1,5 +1,4 @@
 🚨 Projeto GrupoCairo
-Este repositório contém o código-fonte e a documentação de um sistema de monitoramento e alerta desenvolvido com a placa ESP32.
 
 Integrante: Cairo
 
