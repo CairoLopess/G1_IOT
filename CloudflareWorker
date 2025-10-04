@@ -1,0 +1,81 @@
+export default {
+  async fetch(request, env) {
+    const url = new URL(request.url);
+
+    // Página inicial com botão + últimos 5 eventos
+    if (url.pathname === "/") {
+      // Busca eventos no KV
+      const list = await env.sensor_teste.list({ prefix: "evento_" });
+
+      // Ordena chaves por timestamp (decrescente = mais novo primeiro)
+      const eventosOrdenados = list.keys
+        .sort((a, b) => b.name.localeCompare(a.name))
+        .slice(0, 5); // pega só os últimos 5
+
+      let eventosHTML = "<ul>";
+      for (const key of eventosOrdenados) {
+        const event = await env.sensor_teste.get(key.name, { type: "json" });
+        if (event) {
+          eventosHTML += `<li>${new Date(event.timestamp || Date.now()).toLocaleString()} - Tipo: ${event.tipo}</li>`;
+        }
+      }
+      eventosHTML += "</ul>";
+
+      return new Response(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <title>Controle do Buzzer</title>
+        </head>
+        <body>
+          <h1>Controle do Buzzer</h1>
+          <button onclick="ativar()">Ativar Buzzer</button>
+
+          <h2>Últimos 5 eventos</h2>
+          ${eventosHTML}
+
+          <script>
+            async function ativar() {
+              await fetch("/buzzer", { method: "POST" });
+              alert("Comando enviado para o ESP32!");
+              location.reload(); // recarrega a página para atualizar lista
+            }
+          </script>
+        </body>
+        </html>
+      `, { headers: { "Content-Type": "text/html" }});
+    }
+
+    // Recebe eventos do ESP32
+    if (url.pathname === "/insert" && request.method === "POST") {
+      const body = await request.json();
+      const timestamp = Date.now();
+      const key = `evento_${timestamp}`;
+      await env.sensor_teste.put(key, JSON.stringify({ ...body, timestamp }));
+      return new Response("Evento recebido com sucesso");
+    }
+
+    // Botão ativa o buzzer
+    if (url.pathname === "/buzzer" && request.method === "POST") {
+      await env.sensor_teste.put("buzzer", "on");
+      return new Response("Comando enviado: buzzer ON");
+    }
+
+    // ESP32 consulta status do buzzer
+    if (url.pathname === "/status" && request.method === "GET") {
+      const comando = await env.sensor_teste.get("buzzer");
+      return new Response(JSON.stringify({ buzzer: comando || "off" }), {
+        headers: { "Content-Type": "application/json" }
+      });
+    }
+
+    // ESP32 confirma execução (reseta buzzer)
+    if (url.pathname === "/clear" && request.method === "POST") {
+      await env.sensor_teste.put("buzzer", "off");
+      return new Response("Comando resetado");
+    }
+
+    return new Response("Rota não encontrada", { status: 404 });
+  }
+}
